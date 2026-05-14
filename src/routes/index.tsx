@@ -3,6 +3,16 @@ import { getAllPosts, formatDate } from "@/lib/posts";
 
 export const Route = createFileRoute("/")({
   component: Index,
+  head: () => ({
+    meta: [
+      { title: "terry.so — Agent 内核深潜与 Swift 原生开发笔记" },
+      { name: "description", content: "Terry So 的技术博客：AI Agent SDK 内核拆解、Swift/macOS 原生开发实战、开发者工具造轮子记录。" },
+      { property: "og:title", content: "terry.so — Agent 内核深潜" },
+      { property: "og:description", content: "AI Agent、Swift 原生开发与开发者工具的实践笔记。拆 SDK、造轮子、记踩坑。" },
+      { property: "og:url", content: "https://blog.suchuanyi.dev/" },
+    ],
+    links: [{ rel: "canonical", href: "https://blog.suchuanyi.dev/" }],
+  }),
 });
 
 function Index() {

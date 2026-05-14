@@ -5,7 +5,30 @@ export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "About — terry.so" },
-      { name: "description", content: "NEE — 全栈开发者，专注 AI Agent 工具链与 Swift/macOS 原生开发。" },
+      { name: "description", content: "Terry So (NEE) — 全栈开发者，专注 AI Agent 工具链、Swift/macOS 原生开发与开源工具创造。" },
+      { property: "og:title", content: "About Terry So — AI Agent & Swift 开发者" },
+      { property: "og:description", content: "认识 Terry So (NEE)：开源 Agent SDK 作者、SwiftWork 维护者、Claude Code 工具链贡献者。" },
+      { property: "og:url", content: "https://blog.suchuanyi.dev/about" },
+      { property: "og:type", content: "profile" },
+    ],
+    links: [{ rel: "canonical", href: "https://blog.suchuanyi.dev/about" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "Terry So",
+          alternateName: "NEE",
+          url: "https://blog.suchuanyi.dev/about",
+          jobTitle: "Fullstack Developer",
+          description: "Fullstack developer focused on AI Agent tooling and Swift/macOS native development.",
+          sameAs: [
+            "https://github.com/terryso",
+            "https://x.com/suchuanyi",
+          ],
+        }),
+      },
     ],
   }),
 });

@@ -1,0 +1,18 @@
+# terry.so
+
+> AI Agent、Swift 原生开发与开发者工具的实践笔记。拆 SDK、造轮子、记踩坑。
+
+Personal tech blog by Terry So (NEE), a fullstack developer focused on AI Agent
+tooling and Swift / macOS native development. Posts document SDK internals,
+Agent architectures, and developer tools — written in Chinese with code in English.
+
+## Pages
+
+- [Home](/): Recent posts, terminal-style index of all articles.
+- [About](/about): Author bio, open-source projects, and links.
+- [Tags](/tags): Browse posts by topic.
+
+## Optional
+
+- [GitHub](https://github.com/terryso): Open-source projects.
+- [Twitter / X](https://x.com/suchuanyi): Updates and short notes.

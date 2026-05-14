@@ -3,7 +3,16 @@ import { getAllTags } from "@/lib/posts";
 
 export const Route = createFileRoute("/tags")({
   component: TagsIndex,
-  head: () => ({ meta: [{ title: "Tags — terry.so" }] }),
+  head: () => ({
+    meta: [
+      { title: "Tags — terry.so" },
+      { name: "description", content: "按标签浏览 terry.so 的全部文章：AI Agent、Swift、macOS、开发者工具等技术话题索引。" },
+      { property: "og:title", content: "All tags — terry.so" },
+      { property: "og:description", content: "按标签浏览所有文章：AI Agent、Swift、macOS、开发者工具等。" },
+      { property: "og:url", content: "https://blog.suchuanyi.dev/tags" },
+    ],
+    links: [{ rel: "canonical", href: "https://blog.suchuanyi.dev/tags" }],
+  }),
 });
 
 function TagsIndex() {

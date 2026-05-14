@@ -9,17 +9,40 @@ export const Route = createFileRoute("/posts/$slug")({
     if (!post) throw notFound();
     return { post };
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData
-      ? [
-          { title: `${loaderData.post.title} — terry.so` },
-          { name: "description", content: loaderData.post.description ?? loaderData.post.title },
-          { property: "og:title", content: loaderData.post.title },
-          { property: "og:description", content: loaderData.post.description ?? "" },
-          { property: "og:type", content: "article" },
-        ]
-      : [],
-  }),
+  head: ({ loaderData, params }) => {
+    if (!loaderData) return {};
+    const { post } = loaderData;
+    const url = `https://blog.suchuanyi.dev/posts/${params.slug}`;
+    const desc = post.description ?? post.title;
+    return {
+      meta: [
+        { title: `${post.title} — terry.so` },
+        { name: "description", content: desc },
+        { property: "og:title", content: post.title },
+        { property: "og:description", content: desc },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
+        { property: "article:published_time", content: new Date(post.date).toISOString() },
+        ...(post.tags ?? []).map((t: string) => ({ property: "article:tag", content: t })),
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: post.title,
+            description: desc,
+            datePublished: new Date(post.date).toISOString(),
+            author: { "@type": "Person", name: "Terry So", url: "https://blog.suchuanyi.dev/about" },
+            keywords: (post.tags ?? []).join(", "),
+            mainEntityOfPage: { "@type": "WebPage", "@id": url },
+          }),
+        },
+      ],
+    };
+  },
   notFoundComponent: () => (
     <div className="max-w-3xl mx-auto px-4 py-24 text-center">
       <pre className="text-accent">$ cat: post not found</pre>
