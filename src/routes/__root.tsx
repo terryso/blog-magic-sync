@@ -74,13 +74,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "terry.so — terminal-style tech blog" },
-      { name: "description", content: "A markdown-driven personal tech blog. Drop a .md into content/posts/, ship instantly." },
-      { name: "author", content: "Terry So" },
+      { name: "description", content: "AI Agent、Swift 原生开发与开发者工具的实践笔记。拆 SDK、造轮子、记踩坑。" },
+      { name: "author", content: "NEE" },
       { property: "og:title", content: "terry.so" },
-      { property: "og:description", content: "Markdown-driven personal tech blog." },
+      { property: "og:description", content: "AI Agent、Swift 原生开发与开发者工具的实践笔记。" },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:site", content: "@suchuanyi" },
     ],
     links: [
       {

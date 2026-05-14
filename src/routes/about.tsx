@@ -5,7 +5,7 @@ export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "About — terry.so" },
-      { name: "description", content: "About this blog and its author." },
+      { name: "description", content: "NEE — 全栈开发者，专注 AI Agent 工具链与 Swift/macOS 原生开发。" },
     ],
   }),
 });
