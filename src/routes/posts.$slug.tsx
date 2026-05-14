@@ -142,6 +142,14 @@ function PostPage() {
           )}
         </div>
       </nav>
+
+      {/* Comments */}
+      <section className="mt-16 pt-8 border-t border-border">
+        <div className="text-[11px] text-muted-foreground uppercase tracking-widest mb-4">
+          # comments
+        </div>
+        <Giscus term={post.slug} />
+      </section>
     </article>
   );
 }
