@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { getPostsByTag, formatDate } from "@/lib/posts";
+import { getPostsByTag, formatDate, type Post } from "@/lib/posts";
 
 export const Route = createFileRoute("/tags/$tag")({
   component: TagPage,
@@ -23,7 +23,7 @@ function TagPage() {
       </header>
 
       <div className="divide-y divide-border border-y border-border">
-        {posts.map((post, i) => (
+        {posts.map((post: Post, i: number) => (
           <Link
             key={post.slug}
             to="/posts/$slug"
