@@ -4,9 +4,21 @@ import { getPostsByTag, formatDate, type Post } from "@/lib/posts";
 export const Route = createFileRoute("/tags/$tag")({
   component: TagPage,
   loader: ({ params }) => ({ posts: getPostsByTag(params.tag), tag: params.tag }),
-  head: ({ loaderData }) => ({
-    meta: [{ title: loaderData ? `#${loaderData.tag} — terry.so` : "Tag" }],
-  }),
+  head: ({ loaderData, params }) => {
+    const tag = loaderData?.tag ?? params.tag;
+    const count = loaderData?.posts.length ?? 0;
+    const url = `https://blog.suchuanyi.dev/tags/${encodeURIComponent(tag)}`;
+    return {
+      meta: [
+        { title: `#${tag} — terry.so` },
+        { name: "description", content: `terry.so 上标签为 #${tag} 的全部文章（${count} 篇），按时间倒序排列。` },
+        { property: "og:title", content: `#${tag} — terry.so` },
+        { property: "og:description", content: `Posts tagged #${tag} on terry.so — ${count} article(s).` },
+        { property: "og:url", content: url },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
 });
 
 function TagPage() {
