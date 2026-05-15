@@ -1,7 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
 import { getAllPosts, formatDate } from "@/lib/posts";
 
+const PER_PAGE = 10;
+
+const searchSchema = z.object({
+  page: fallback(z.number().int().min(1), 1).default(1),
+});
+
 export const Route = createFileRoute("/")({
+  validateSearch: zodValidator(searchSchema),
   component: Index,
   head: () => ({
     meta: [
@@ -16,13 +25,18 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const posts = getAllPosts();
+  const all = getAllPosts();
+  const { page } = Route.useSearch();
+  const totalPages = Math.max(1, Math.ceil(all.length / PER_PAGE));
+  const current = Math.min(Math.max(1, page), totalPages);
+  const start = (current - 1) * PER_PAGE;
+  const posts = all.slice(start, start + PER_PAGE);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
       {/* Banner */}
       <header className="mb-12 border-l-2 border-accent pl-4">
-        <pre className="text-[10px] sm:text-xs text-accent leading-tight overflow-x-auto">{`$ ls -la ~/articles | head -n ${posts.length}`}</pre>
+        <pre className="text-[10px] sm:text-xs text-accent leading-tight overflow-x-auto">{`$ ls -la ~/articles | sed -n '${start + 1},${start + posts.length}p'`}</pre>
         <h1 className="mt-3 text-2xl sm:text-3xl font-bold tracking-tight">
           Agent 内核深潜<span className="text-accent cursor-blink">_</span>
         </h1>
@@ -33,7 +47,9 @@ function Index() {
 
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">recent_buffers</h2>
-        <span className="text-[10px] text-muted-foreground">COUNT: {String(posts.length).padStart(2, "0")}</span>
+        <span className="text-[10px] text-muted-foreground">
+          PAGE {String(current).padStart(2, "0")}/{String(totalPages).padStart(2, "0")} · TOTAL {String(all.length).padStart(2, "0")}
+        </span>
       </div>
 
       <div className="divide-y divide-border border-y border-border">
@@ -45,7 +61,7 @@ function Index() {
             className="group block py-6 hover:bg-surface/60 transition-colors"
           >
             <div className="grid grid-cols-[2.5rem_1fr] md:grid-cols-[3rem_1fr_11rem] gap-3">
-              <div className="text-muted-foreground text-xs pt-1.5">{String(i + 1).padStart(2, "0")}</div>
+              <div className="text-muted-foreground text-xs pt-1.5">{String(start + i + 1).padStart(2, "0")}</div>
               <div className="space-y-2 min-w-0">
                 <h3 className="text-base sm:text-lg font-bold group-hover:text-accent transition-colors leading-snug">
                   {post.title}
@@ -79,6 +95,56 @@ function Index() {
           </div>
         )}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <nav className="mt-10 flex items-center justify-between gap-4 text-sm" aria-label="Pagination">
+          <div className="flex-1">
+            {current > 1 ? (
+              <Link
+                to="/"
+                search={{ page: current - 1 }}
+                className="inline-block px-4 py-2 border border-border hover:border-accent/60 hover:text-accent transition-colors"
+              >
+                ← prev
+              </Link>
+            ) : (
+              <span className="inline-block px-4 py-2 border border-border/50 text-muted-foreground/40 cursor-not-allowed">← prev</span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-1 text-[11px] text-muted-foreground uppercase tracking-widest">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+              <Link
+                key={p}
+                to="/"
+                search={{ page: p }}
+                className={
+                  p === current
+                    ? "px-2.5 py-1 border border-accent text-accent"
+                    : "px-2.5 py-1 border border-border hover:border-accent/60 hover:text-accent transition-colors"
+                }
+              >
+                {String(p).padStart(2, "0")}
+              </Link>
+            ))}
+          </div>
+
+          <div className="flex-1 text-right">
+            {current < totalPages ? (
+              <Link
+                to="/"
+                search={{ page: current + 1 }}
+                className="inline-block px-4 py-2 border border-border hover:border-accent/60 hover:text-accent transition-colors"
+              >
+                next →
+              </Link>
+            ) : (
+              <span className="inline-block px-4 py-2 border border-border/50 text-muted-foreground/40 cursor-not-allowed">next →</span>
+            )}
+          </div>
+        </nav>
+      )}
     </div>
   );
 }
