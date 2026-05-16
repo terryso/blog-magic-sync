@@ -1,6 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
+import { useEffect, useRef } from "react";
 import { getAllPosts, formatDate } from "@/lib/posts";
 
 const PER_PAGE = 10;
