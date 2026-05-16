@@ -33,6 +33,47 @@ function Index() {
   const start = (current - 1) * PER_PAGE;
   const posts = all.slice(start, start + PER_PAGE);
 
+  const navigate = useNavigate();
+  const lastKeyRef = useRef<{ key: string; t: number }>({ key: "", t: 0 });
+  useEffect(() => {
+    const isTyping = (el: EventTarget | null) => {
+      const t = el as HTMLElement | null;
+      if (!t) return false;
+      const tag = t.tagName;
+      return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || t.isContentEditable;
+    };
+    const go = (p: number) => {
+      const target = Math.min(Math.max(1, p), totalPages);
+      if (target === current) return;
+      navigate({ to: "/", search: { page: target } });
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (isTyping(e.target)) return;
+      if (e.key === "h" || e.key === "ArrowLeft" || e.key === "[") {
+        e.preventDefault();
+        go(current - 1);
+      } else if (e.key === "l" || e.key === "ArrowRight" || e.key === "]") {
+        e.preventDefault();
+        go(current + 1);
+      } else if (e.key === "G") {
+        e.preventDefault();
+        go(totalPages);
+      } else if (e.key === "g") {
+        const now = Date.now();
+        if (lastKeyRef.current.key === "g" && now - lastKeyRef.current.t < 500) {
+          e.preventDefault();
+          go(1);
+          lastKeyRef.current = { key: "", t: 0 };
+        } else {
+          lastKeyRef.current = { key: "g", t: now };
+        }
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [current, totalPages, navigate]);
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
       {/* Banner */}
